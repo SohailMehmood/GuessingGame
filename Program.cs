@@ -2,26 +2,27 @@
 
 namespace GuessingGame
 {
-    class Program
+    public static class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            Random random = new Random();
-            List<int> list = new List<int>();
+            if (args is null)
+            {
+                throw new ArgumentNullException(nameof(args));
+            }
+
+            Random random = new();
+            List<int> list = new();
             bool playAgain = true;
             int min = 1;
             int max = 10;
-            int guess;
-            int number;
-            int guesses;
-            string response;
+
 
             while (playAgain)
             {
-                guess = 0;
-                guesses = 0;
-                response = "";
-                number = random.Next(min, max + 1);
+                int guess = 0;
+                int guesses = 0;
+                int number = random.Next(min, max + 1);
 
                 while (guess != number)
                 {
@@ -60,7 +61,7 @@ namespace GuessingGame
                 Console.WriteLine("Guesses: " + guesses);
 
                 Console.WriteLine("Would you like to play again (Y/N): ");
-                response = Console.ReadLine();
+                string response = Console.ReadLine() ?? String.Empty;
                 response = response.ToUpper();
 
                 if (response == "Y")

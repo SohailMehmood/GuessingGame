@@ -6,59 +6,64 @@ namespace GuessingGame
     {
         public static void Main(string[] args)
         {
-            if (args is null)
+            if (args == null)
             {
                 throw new ArgumentNullException(nameof(args));
             }
 
             Random random = new();
-            List<int> list = new();
+            List<int> previousGuesses = new();
             bool playAgain = true;
             int min = 1;
             int max = 10;
-
 
             while (playAgain)
             {
                 int guess = 0;
                 int guesses = 0;
-                int number = random.Next(min, max + 1);
+
+                int number = random.Next(min, max); 
 
                 while (guess != number)
                 {
-                    Console.WriteLine("Guess a number between " + min + " - " + max + " : ");
-                    guess = Convert.ToInt32(Console.ReadLine());
-                    Console.WriteLine("Guess: " + guess);
+                    Console.WriteLine($"Guess a number between {min} - {max}:");
+                    string input = Console.ReadLine() ?? String.Empty;
+                    bool isNumber = Int32.TryParse(input, out guess);
 
-                    if (!list.Contains(guess))
+                    if (!isNumber || guess < 1 || guess > 10)
                     {
-                        if (guess > number)
+                        Console.WriteLine("Sorry the value entered was not a valid number!");
+                    }                  
+
+                    if (!previousGuesses.Contains(guess))
+                    {
+                        if (guess > number && guess <= 10)
                         {
-                            Console.WriteLine(guess + " is to high!");
+                            Console.WriteLine($"{guess} is to high!");
                         }
-                        else if (guess < number)
+                        else if (guess < number && guess > 0)
                         {
-                            Console.WriteLine(guess + " is to low!");
+                            Console.WriteLine($"{guess} is to low!");
                         }
 
-                        list.Add(guess);
+                        previousGuesses.Add(guess);
                         guesses++;
                     }
-                    else if (list.Contains(guess))
+                    else if (previousGuesses.Contains(guess))
                     {
                         if (guess > number)
                         {
-                            Console.WriteLine(guess + " is to high!");
+                            Console.WriteLine($"{guess} is to high!");
                         }
                         else if (guess < number)
                         {
-                            Console.WriteLine(guess + " is to low!");
+                            Console.WriteLine($"{guess} is to low!");
                         }
                     }
                 }
-                Console.WriteLine("Number: " + number);
+                Console.WriteLine($"Number: {number}");
                 Console.WriteLine("YOU WIN!");
-                Console.WriteLine("Guesses: " + guesses);
+                Console.WriteLine($"Guesses: {guesses}");
 
                 Console.WriteLine("Would you like to play again (Y/N): ");
                 string response = Console.ReadLine() ?? String.Empty;
@@ -67,7 +72,7 @@ namespace GuessingGame
                 if (response == "Y")
                 {
                     playAgain = true;
-                    list.Clear();
+                    previousGuesses.Clear();
                 }
                 else
                 {
